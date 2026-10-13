@@ -81,22 +81,32 @@ def reset_game():
     last_bonus = pygame.time.get_ticks()
     state = PLAYING
 def spawn_wall():
-    global wall
+    global wall, bonus
     occupied = set(snake)
     occupied.add(food)
     if speed_fruit:
         occupied.add(speed_fruit)
-    if bonus:
-        occupied.add(bonus)
+
     for _ in range(100):
-        x = random.randint(3, COLS - 4)
-        y = random.randint(3, ROWS - 4)
+        bx = random.randint(2, COLS - 3)
+        by = random.randint(2, ROWS - 3)
+        bonus_pos = (bx, by)
+        wx = bx + random.choice([-2, -1, 1, 2])
+        wy = by + random.choice([-1, 0, 1])
         candidate = [
-            (x, y),
-            (x + 1, y),
-            (x + 2, y)
+            (wx, wy),
+            (wx, wy + 1),
+            (wx, wy + 2)
         ]
-        if not any(pos in occupied for pos in candidate):
+        if (
+            0 <= wx < COLS
+            and 0 <= wy
+            and wy + 2 < ROWS
+            and bonus_pos not in occupied
+            and not any(p in occupied for p in candidate)
+            and bonus_pos not in candidate
+        ):
+            bonus = bonus_pos
             wall = candidate
             return
 def draw_background():
@@ -229,15 +239,10 @@ while True:
                 snake, [food] + wall
             )
             last_spawn = now
-        if bonus is None and now - last_bonus > 10000:
-            bonus = random_cell(
-                snake,
-                [food] + wall +
-                ([speed_fruit] if speed_fruit else [])
-            )
-            last_bonus = now
+            
         if not wall and now - last_spawn > 14000:
             spawn_wall()
+            last_bonus = now
         current_speed = (
             base_speed * 1.8
             if now < speed_until
@@ -290,7 +295,7 @@ while True:
                     else:
                         snake.pop()
                     base_speed = min(16, 8 + score // 100)
-                    
+
         draw_game()
     elif state == GAME_OVER:
         draw_overlay(
