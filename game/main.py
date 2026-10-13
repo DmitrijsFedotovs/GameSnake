@@ -66,7 +66,7 @@ def reset_game():
     snake = [(COLS // 2, ROWS // 2),
              (COLS // 2 - 1, ROWS // 2),
              (COLS // 2 - 2, ROWS // 2)]
-
+    
     direction = (1, 0)
     next_direction = direction
     food = random_cell(snake)
@@ -290,7 +290,7 @@ while True:
                     else:
                         snake.pop()
                     base_speed = min(16, 8 + score // 100)
-
+                    
         draw_game()
     elif state == GAME_OVER:
         draw_overlay(
