@@ -7,8 +7,8 @@ COLS = 32
 ROWS = 26
 WIDTH = COLS * CELL
 HEIGHT = ROWS * CELL + 80
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Metal Snake Solid")
+screen = pygame.display.setMode((WIDTH, HEIGHT))
+pygame.display.setCaption("Metal Snake Solid")
 clock = pygame.time.Clock()
 BLACK = (12, 15, 20)
 DARK = (23, 29, 38)
@@ -26,7 +26,7 @@ MENU = "menu"
 PLAYING = "playing"
 GAME_OVER = "game_over"
 state = MENU
-def random_cell(snake, occupied=None):
+def randomCell(snake, occupied=None):
     occupied = set(occupied or [])
     occupied.update(snake)
     while True:
@@ -36,7 +36,7 @@ def random_cell(snake, occupied=None):
         )
         if pos not in occupied:
             return pos
-def draw_cell(pos, color, inset=2):
+def drawCell(pos, color, inset=2):
     x, y = pos
     pygame.draw.rect(
         screen,
@@ -49,7 +49,7 @@ def draw_cell(pos, color, inset=2):
         ),
         border_radius=4
     )
-def draw_text(text, font_obj, color, x, y, center=True):
+def drawText(text, font_obj, color, x, y, center=True):
     surface = font_obj.render(text, True, color)
     rect = surface.get_rect()
     if center:
@@ -57,7 +57,7 @@ def draw_text(text, font_obj, color, x, y, center=True):
     else:
         rect.topleft = (x, y)
     screen.blit(surface, rect)
-def reset_game():
+def resetGame():
     global snake, direction, next_direction
     global food, speed_fruit, bonus, wall
     global score, base_speed, speed_until
@@ -69,19 +69,19 @@ def reset_game():
     
     direction = (1, 0)
     next_direction = direction
-    food = random_cell(snake)
+    food = randomCell(snake)
     speed_fruit = None
     bonus = None
     wall = []
     score = 0
     base_speed = 8
     speed_until = 0
-    last_move = pygame.time.get_ticks()
-    last_spawn = pygame.time.get_ticks()
-    last_bonus = pygame.time.get_ticks()
-    last_wall_bonus = pygame.time.get_ticks()
+    last_move = pygame.time.getTicks()
+    last_spawn = pygame.time.getTicks()
+    last_bonus = pygame.time.getTicks()
+    last_wall_bonus = pygame.time.getTicks()
     state = PLAYING
-def spawn_wall():
+def spawnWall():
     global wall, bonus
     occupied = set(snake)
     occupied.add(food)
@@ -111,7 +111,7 @@ def spawn_wall():
             wall.extend(candidate)
             return True
     return False
-def draw_background():
+def drawBackground():
     screen.fill(BLACK)
     for x in range(COLS + 1):
         pygame.draw.line(
@@ -127,15 +127,15 @@ def draw_background():
         )
     pygame.draw.rect(screen, (30, 38, 48), (0, 0, WIDTH, 80))
     pygame.draw.line(screen, STEEL, (0, 79), (WIDTH, 79), 2)
-    draw_text(
+    drawText(
         "METAL SNAKE SOLID",
         font, CYAN, 12, 10, center=False
     )
-    draw_text(
+    drawText(
         f"SCORE: {score}",
         small_font, WHITE, 12, 47, center=False
     )
-    now = pygame.time.get_ticks()
+    now = pygame.time.getTicks()
     if now < speed_until:
         remaining = (speed_until - now) / 1000
         status = f"SPEED BOOST: {remaining:.1f}s"
@@ -143,20 +143,20 @@ def draw_background():
     else:
         status = "TACTICAL MODE"
         color = GREEN
-    draw_text(
+    drawText(
         status, small_font, color,
         WIDTH - 12, 47, center=False
     )
     status_surface = small_font.render(status, True, color)
     screen.blit(
         status_surface,
-        (WIDTH - status_surface.get_width() - 12, 47)
+        (WIDTH - status_surface.getWidth() - 12, 47)
     )
-def draw_game():
-    draw_background()
-    draw_cell(food, RED, 3)
+def drawGame():
+    drawBackground()
+    drawCell(food, RED, 3)
     if speed_fruit:
-        draw_cell(speed_fruit, GOLD, 2)
+        drawCell(speed_fruit, GOLD, 2)
         pygame.draw.circle(
             screen, WHITE,
             (
@@ -166,24 +166,24 @@ def draw_game():
             3
         )
     if bonus:
-        draw_cell(bonus, CYAN, 4)
+        drawCell(bonus, CYAN, 4)
     for pos in wall:
-        draw_cell(pos, STEEL, 1)
+        drawCell(pos, STEEL, 1)
     for i, pos in enumerate(snake):
-        draw_cell(pos, LIME if i == 0 else GREEN)
+        drawCell(pos, LIME if i == 0 else GREEN)
 
     pygame.display.flip()
-def draw_overlay(title, subtitle, hint):
-    draw_game()
+def drawOverlay(title, subtitle, hint):
+    drawGame()
     overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
     overlay.fill((0, 0, 0, 185))
     screen.blit(overlay, (0, 0))
-    draw_text(title, title_font, CYAN, WIDTH // 2, HEIGHT // 2 - 65)
-    draw_text(subtitle, font, WHITE, WIDTH // 2, HEIGHT // 2)
-    draw_text(hint, small_font, GOLD, WIDTH // 2, HEIGHT // 2 + 45)
+    drawText(title, title_font, CYAN, WIDTH // 2, HEIGHT // 2 - 65)
+    drawText(subtitle, font, WHITE, WIDTH // 2, HEIGHT // 2)
+    drawText(hint, small_font, GOLD, WIDTH // 2, HEIGHT // 2 + 45)
     pygame.display.flip()
 while True:
-    now = pygame.time.get_ticks()
+    now = pygame.time.getTicks()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -191,10 +191,10 @@ while True:
         if event.type == pygame.KEYDOWN:
             if state == MENU:
                 if event.key in (pygame.K_RETURN, pygame.K_SPACE):
-                    reset_game()
+                    resetGame()
             elif state == GAME_OVER:
                 if event.key == pygame.K_r:
-                    reset_game()
+                    resetGame()
                 elif event.key == pygame.K_ESCAPE:
                     state = MENU
             elif state == PLAYING:
@@ -214,36 +214,36 @@ while True:
                     state = MENU
     if state == MENU:
         screen.fill(BLACK)
-        draw_text(
+        drawText(
             "METAL SNAKE SOLID",
             title_font, CYAN, WIDTH // 2, HEIGHT // 2 - 100
         )
-        draw_text(
+        drawText(
             "TACTICAL SNAKE OPERATION",
             small_font, GREEN, WIDTH // 2, HEIGHT // 2 - 48
         )
-        draw_text(
+        drawText(
             "ARROW KEYS / WASD - MOVE",
             font, WHITE, WIDTH // 2, HEIGHT // 2 + 10
         )
-        draw_text(
+        drawText(
             "ENTER - START MISSION",
             font, GOLD, WIDTH // 2, HEIGHT // 2 + 55
         )
-        draw_text(
+        drawText(
             "ESC - RETURN TO MENU",
             small_font, STEEL, WIDTH // 2, HEIGHT // 2 + 95
         )
         pygame.display.flip()
     elif state == PLAYING:
         if speed_fruit is None and now - last_spawn > 7000:
-            speed_fruit = random_cell(
+            speed_fruit = randomCell(
                 snake, [food] + wall
             )
             last_spawn = now
 
         if now - last_wall_bonus >= 14000:
-            if spawn_wall():
+            if spawnWall():
                 last_wall_bonus = now
 
         current_speed = (
@@ -280,7 +280,7 @@ while True:
                     snake.insert(0, new_head)
                     if eating:
                         score += 10
-                        food = random_cell(
+                        food = randomCell(
                             snake,
                             wall +
                             ([speed_fruit] if speed_fruit else []) +
@@ -299,9 +299,9 @@ while True:
                         snake.pop()
                     base_speed = min(16, 8 + score // 100)
 
-        draw_game()
+        drawGame()
     elif state == GAME_OVER:
-        draw_overlay(
+        drawOverlay(
             "MISSION FAILED",
             f"FINAL SCORE: {score}",
             "PRESS R TO RESTART"
