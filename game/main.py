@@ -61,7 +61,7 @@ def reset_game():
     global snake, direction, next_direction
     global food, speed_fruit, bonus, wall
     global score, base_speed, speed_until
-    global last_move, last_spawn, last_bonus
+    global last_move, last_spawn, last_bonus, last_wall_bonus
     global state
     snake = [(COLS // 2, ROWS // 2),
              (COLS // 2 - 1, ROWS // 2),
@@ -79,17 +79,19 @@ def reset_game():
     last_move = pygame.time.get_ticks()
     last_spawn = pygame.time.get_ticks()
     last_bonus = pygame.time.get_ticks()
+    last_wall_bonus = pygame.time.get_ticks()
     state = PLAYING
 def spawn_wall():
     global wall, bonus
     occupied = set(snake)
     occupied.add(food)
-    if speed_fruit:
+    occupied.update(wall)
+    if speed_fruit is not None:
         occupied.add(speed_fruit)
 
     for _ in range(100):
         bx = random.randint(2, COLS - 3)
-        by = random.randint(2, ROWS - 3)
+        by = random.randint(2, ROWS - 4)
         bonus_pos = (bx, by)
         wx = bx + random.choice([-2, -1, 1, 2])
         wy = by + random.choice([-1, 0, 1])
@@ -103,12 +105,12 @@ def spawn_wall():
             and 0 <= wy
             and wy + 2 < ROWS
             and bonus_pos not in occupied
-            and not any(p in occupied for p in candidate)
-            and bonus_pos not in candidate
+            and not any(pos in occupied for pos in candidate)
         ):
             bonus = bonus_pos
-            wall = candidate
-            return
+            wall.extend(candidate)
+            return True
+    return False
 def draw_background():
     screen.fill(BLACK)
     for x in range(COLS + 1):
@@ -239,10 +241,11 @@ while True:
                 snake, [food] + wall
             )
             last_spawn = now
-            
-        if not wall and now - last_spawn > 14000:
-            spawn_wall()
-            last_bonus = now
+
+        if now - last_wall_bonus >= 14000:
+            if spawn_wall():
+                last_wall_bonus = now
+
         current_speed = (
             base_speed * 1.8
             if now < speed_until
