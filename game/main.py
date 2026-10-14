@@ -1,6 +1,11 @@
 import pygame
 import random
 import sys
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+from leaderboard import save_score
 pygame.init()
 CELL = 20
 COLS = 32
@@ -26,6 +31,8 @@ MENU = "menu"
 PLAYING = "playing"
 GAME_OVER = "game_over"
 state = MENU
+player_name = ""
+game_over_saved = False
 def randomCell(snake, occupied=None):
     occupied = set(occupied or [])
     occupied.update(snake)
@@ -62,7 +69,7 @@ def resetGame():
     global food, speed_fruit, bonus, wall
     global score, base_speed, speed_until
     global last_move, last_spawn, last_bonus, last_wall_bonus
-    global state
+    global state, game_over_saved
     snake = [(COLS // 2, ROWS // 2),
              (COLS // 2 - 1, ROWS // 2),
              (COLS // 2 - 2, ROWS // 2)]
@@ -80,6 +87,7 @@ def resetGame():
     last_spawn = pygame.time.get_ticks()
     last_bonus = pygame.time.get_ticks()
     last_wall_bonus = pygame.time.get_ticks()
+    game_over_saved = False
     state = PLAYING
 def spawnWall():
     global wall, bonus
@@ -188,10 +196,17 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.TEXTINPUT and state == MENU:
+            if len(player_name) < 16 and event.text.isprintable():
+                player_name += event.text
         if event.type == pygame.KEYDOWN:
             if state == MENU:
-                if event.key in (pygame.K_RETURN, pygame.K_SPACE):
-                    resetGame()
+                if event.key == pygame.K_BACKSPACE:
+                    player_name = player_name[:-1]
+                elif event.key == pygame.K_RETURN:
+                    if player_name.strip():
+                        player_name = player_name.strip()
+                        resetGame()
             elif state == GAME_OVER:
                 if event.key == pygame.K_r:
                     resetGame()
@@ -223,16 +238,20 @@ while True:
             small_font, GREEN, WIDTH // 2, HEIGHT // 2 - 48
         )
         drawText(
+            f"PLAYER NAME: {player_name or '_'}",
+            font, WHITE, WIDTH // 2, HEIGHT // 2 - 10
+        )
+        drawText(
             "ARROW KEYS / WASD - MOVE",
-            font, WHITE, WIDTH // 2, HEIGHT // 2 + 10
+            font, WHITE, WIDTH // 2, HEIGHT // 2 + 30
         )
         drawText(
             "ENTER - START MISSION",
-            font, GOLD, WIDTH // 2, HEIGHT // 2 + 55
+            font, GOLD, WIDTH // 2, HEIGHT // 2 + 65
         )
         drawText(
             "ESC - RETURN TO MENU",
-            small_font, STEEL, WIDTH // 2, HEIGHT // 2 + 95
+            small_font, STEEL, WIDTH // 2, HEIGHT // 2 + 100
         )
         pygame.display.flip()
     elif state == PLAYING:
@@ -301,6 +320,9 @@ while True:
 
         drawGame()
     elif state == GAME_OVER:
+        if not game_over_saved:
+            save_score(player_name, score)
+            game_over_saved = True
         drawOverlay(
             "MISSION FAILED",
             f"FINAL SCORE: {score}",
