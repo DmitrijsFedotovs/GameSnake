@@ -73,7 +73,6 @@ def resetGame():
     snake = [(COLS // 2, ROWS // 2),
              (COLS // 2 - 1, ROWS // 2),
              (COLS // 2 - 2, ROWS // 2)]
-    
     direction = (1, 0)
     next_direction = direction
     food = randomCell(snake)
@@ -96,7 +95,6 @@ def spawnWall():
     occupied.update(wall)
     if speed_fruit is not None:
         occupied.add(speed_fruit)
-
     for _ in range(100):
         bx = random.randint(2, COLS - 3)
         by = random.randint(2, ROWS - 4)
@@ -179,7 +177,6 @@ def drawGame():
         drawCell(pos, STEEL, 1)
     for i, pos in enumerate(snake):
         drawCell(pos, LIME if i == 0 else GREEN)
-
     pygame.display.flip()
 def drawOverlay(title, subtitle, hint):
     drawGame()
@@ -260,11 +257,9 @@ while True:
                 snake, [food] + wall
             )
             last_spawn = now
-
         if now - last_wall_bonus >= 14000:
             if spawnWall():
                 last_wall_bonus = now
-
         current_speed = (
             base_speed * 1.8
             if now < speed_until
@@ -284,7 +279,6 @@ while True:
                 state = GAME_OVER
             elif new_head in wall:
                 state = GAME_OVER
-
             else:
                 eating = new_head == food
                 growing = (
@@ -317,7 +311,6 @@ while True:
                     else:
                         snake.pop()
                     base_speed = min(16, 8 + score // 100)
-
         drawGame()
     elif state == GAME_OVER:
         if not game_over_saved:

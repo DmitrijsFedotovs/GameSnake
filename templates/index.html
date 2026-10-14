@@ -3,25 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <meta http-equiv="refresh" content="5">
-
     <title>Metal Snake Solid — Leaderboard</title>
-
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
     <main class="container">
         <header>
             <h1>METAL SNAKE SOLID</h1>
             <p class="subtitle">TACTICAL SNAKE OPERATION</p>
         </header>
-
         <section class="panel">
             <h2>Rekordu tabula</h2>
-
             <table>
                 <thead>
                     <tr>
@@ -30,7 +24,6 @@
                         <th>Punkti</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     {% for player in players %}
                     <tr>
@@ -45,9 +38,7 @@
                                 {{ loop.index }}
                             {% endif %}
                         </td>
-
                         <td>{{ player.player_name }}</td>
-
                         <td class="score">{{ player.score }}</td>
                     </tr>
                     {% else %}
@@ -59,7 +50,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-
             <p class="note">
                 Tabula tiek atjaunināta ik pēc 5 sekundēm.
             </p>
