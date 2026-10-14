@@ -7,8 +7,8 @@ COLS = 32
 ROWS = 26
 WIDTH = COLS * CELL
 HEIGHT = ROWS * CELL + 80
-screen = pygame.display.setMode((WIDTH, HEIGHT))
-pygame.display.setCaption("Metal Snake Solid")
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Metal Snake Solid")
 clock = pygame.time.Clock()
 BLACK = (12, 15, 20)
 DARK = (23, 29, 38)
@@ -76,10 +76,10 @@ def resetGame():
     score = 0
     base_speed = 8
     speed_until = 0
-    last_move = pygame.time.getTicks()
-    last_spawn = pygame.time.getTicks()
-    last_bonus = pygame.time.getTicks()
-    last_wall_bonus = pygame.time.getTicks()
+    last_move = pygame.time.get_ticks()
+    last_spawn = pygame.time.get_ticks()
+    last_bonus = pygame.time.get_ticks()
+    last_wall_bonus = pygame.time.get_ticks()
     state = PLAYING
 def spawnWall():
     global wall, bonus
@@ -135,7 +135,7 @@ def drawBackground():
         f"SCORE: {score}",
         small_font, WHITE, 12, 47, center=False
     )
-    now = pygame.time.getTicks()
+    now = pygame.time.get_ticks()
     if now < speed_until:
         remaining = (speed_until - now) / 1000
         status = f"SPEED BOOST: {remaining:.1f}s"
@@ -150,7 +150,7 @@ def drawBackground():
     status_surface = small_font.render(status, True, color)
     screen.blit(
         status_surface,
-        (WIDTH - status_surface.getWidth() - 12, 47)
+        (WIDTH - status_surface.get_width() - 12, 47)
     )
 def drawGame():
     drawBackground()
@@ -183,7 +183,7 @@ def drawOverlay(title, subtitle, hint):
     drawText(hint, small_font, GOLD, WIDTH // 2, HEIGHT // 2 + 45)
     pygame.display.flip()
 while True:
-    now = pygame.time.getTicks()
+    now = pygame.time.get_ticks()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
