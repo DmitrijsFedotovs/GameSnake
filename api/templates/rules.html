@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metal Snake Solid — Noteikumi</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1>METAL SNAKE SOLID</h1>
+            <p class="subtitle">TACTICAL SNAKE OPERATION</p>
+        </header>
+        <section class="panel">
+            <h2>Spēles noteikumi</h2>
+            <p>
+                Metal Snake Solid ir Snake žanra spēle.
+                Vadi čūsku, vāc augļus un bonusus, iegūsti punktus
+                un centies izvairīties no sadursmēm.
+            </p>
+            <h2>Kā spēlēt?</h2>
+            <ul>
+                <li>Izvēlnē ievadi savu spēlētāja vārdu.</li>
+                <li>Nospied ENTER, lai sāktu spēli.</li>
+                <li>Izmanto bultiņu taustiņus vai W, A, S, D, lai vadītu čūsku.</li>
+                <li>Par parasta augļa savākšanu saņem 10 punktus.</li>
+                <li>Par ātruma augļa savākšanu saņem 20 punktus.</li>
+                <li>Par bonusa savākšanu saņem 50 punktus.</li>
+                <li>Sadursme ar sienu, šķērsli vai savu ķermeni beidz spēli.</li>
+            </ul>
+            <h2>Īpašās mehānikas</h2>
+            <h3>1. Ātruma auglis</h3>
+            <p>
+                Dažreiz laukumā parādās īpašs auglis.
+                Kad čūska to apēd, tās ātrums uz 5 sekundēm palielinās,
+                pēc tam atgriežoties normālā līmenī.
+            </p>
+            <h3>2. Siena un bonuss</h3>
+            <p>
+                Ik pa laikam laukumā parādās siena un bonuss.
+                Bonusa savākšana dod papildu punktus,
+                bet sadursme ar sienu beidz spēli.
+            </p>
+            <h2>Spēles beigas</h2>
+            <p>
+                Pēc spēles beigām rezultāts tiek nosūtīts serverim
+                un saglabāts SQLite datubāzē, ja serveris ir pieejams.
+                Labākos rezultātus var apskatīt līderu tabulā.
+            </p>
+            <p>
+                <a href="{{ url_for('home') }}">Atpakaļ uz līderu tabulu</a>
+            </p>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+.venv-old/
+venv/
+
+# SQLite databases and backups
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# VS Code local settings
+.vscode/
+
+# Test and coverage files
+.pytest_cache/
+.coverage
+htmlcov/

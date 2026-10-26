@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
-from leaderboard import save_score
+from client.api_client import send_score
 pygame.init()
 CELL = 20
 COLS = 32
@@ -314,7 +314,9 @@ while True:
         drawGame()
     elif state == GAME_OVER:
         if not game_over_saved:
-            save_score(player_name, score)
+            saved = send_score(player_name, score)
+            if not saved:
+                print("Warning: Could not send score to the server.")
             game_over_saved = True
         drawOverlay(
             "MISSION FAILED",
